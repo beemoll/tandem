@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tandem Weight Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 10px;
+            background-color: #2c2c2c;
+            color: white;
+        }
+
+        .calculator {
+            background-color: #1a1a1a;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            margin: 0;
+        }
+
+        .weight-inputs {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        input {
+            padding: 12px;
+            border: 1px solid #444;
+            border-radius: 5px;
+            background-color: #333;
+            color: white;
+            font-size: 18px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .select-input {
+            padding: 12px;
+            border: 1px solid #444;
+            border-radius: 5px;
+            background-color: #333;
+            color: white;
+            font-size: 18px;
+            width: 100%;
+            box-sizing: border-box;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23FFFFFF%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.4-12.8z%22%2F%3E%3C%2Fsvg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 12px;
+            padding-right: 30px;
+            cursor: pointer;
+        }
+
+        .select-input:focus {
+            outline: none;
+            border-color: #4CAF50;
+        }
+
+        .controls {
+            display: grid;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .results {
+            background-color: #333;
+            padding: 12px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+
+        .weight-display {
+            font-size: 20px;
+            color: #4CAF50;
+            margin-bottom: 10px;
+        }
+
+        .total-weight {
+            font-size: 22px;
+            color: #ffd700;
+            margin: 20px 0;
+            text-align: center;
+            border-top: 1px solid #444;
+            padding-top: 20px;
+        }
+
+        .weight-indicator {
+            color: #4CAF50;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        .weight-indicator.over {
+            color: #ff4444;
+        }
+
+        .weight-indicator.under {
+            color: #4CAF50;
+        }
+
+        button {
+            padding: 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+            width: 100%;
+            margin: 10px 0;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #888;
+            font-size: 16px;
+        }
+
+        .recommendation {
+            font-size: 18px;
+            color: #ffd700;
+            margin: 15px 0;
+            font-weight: bold;
+            word-wrap: break-word;
+        }
+
+        @media (min-width: 600px) {
+            .weight-inputs {
+                flex-direction: row;
+                gap: 10px;
+            }
+
+            .controls {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            button {
+                padding: 10px 20px;
+            }
+
+            .header h1 {
+                font-size: 32px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <div class="header">
+            <h1>Tandem Weight Calculator</h1>
+        </div>
+
+        <div class="weight-inputs">
+            <div>
+                <label>Steer Weight (lbs)</label>
+                <input type="number" id="steerWeight" placeholder="11,500">
+            </div>
+            <div>
+                <label>Drive Weight (lbs)</label>
+                <input type="number" id="driveWeight" placeholder="26,400">
+            </div>
+            <div>
+                <label>Trailer Weight (lbs)</label>
+                <input type="number" id="trailerWeight" placeholder="31,340">
+            </div>
+        </div>
+
+        <div class="controls">
+            <div>
+                <label>Trailer Position (hole #)</label>
+                <select id="trailerPosition" class="select-input">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                    <option value="11">11</option>
+                    <option value="12">12</option>
+                    <option value="13">13</option>
+                    <option value="14">14</option>
+                    <option value="15">15</option>
+                    <option value="16">16</option>
+                    <option value="17">17</option>
+                    <option value="18">18</option>
+                    <option value="19">19</option>
+                    <option value="20">20</option>
+                    <option value="21">21</option>
+                    <option value="22">22</option>
+                    <option value="23">23</option>
+                    <option value="24">24</option>
+                    <option value="25">25</option>
+                </select>
+            </div>
+            <div>
+                <label>Holes Every (inches)</label>
+                <input type="number" id="holeSpacing" value="6" min="1">
+            </div>
+        </div>
+
+        <button onclick="calculateWeight()">Calculate Balance</button>
+
+        <div class="results">
+            <h3>Weight Distribution:</h3>
+            <div id="weightResults"></div>
+            <div id="totalWeight" class="total-weight"></div>
+            <div id="weightIndicator" class="weight-indicator"></div>
+        </div>
+    </div>
+
+    <script>
+        function calculateWeight() {
+            const steerWeight = parseFloat(document.getElementById('steerWeight').value) || 11500;
+            const driveWeight = parseFloat(document.getElementById('driveWeight').value) || 26400;
+            const trailerWeight = parseFloat(document.getElementById('trailerWeight').value) || 31340;
+            const trailerPosition = parseInt(document.getElementById('trailerPosition').value) || 1;
+            const holeSpacing = parseInt(document.getElementById('holeSpacing').value) || 6;
+
+            // Calculate total weight
+            const totalWeight = steerWeight + driveWeight + trailerWeight;
+            
+            // Constants
+            const MAX_STEER = 12000;
+            const MAX_TANDEM = 34000;
+            // Weight changes per hole (based on app examples)
+            const WEIGHT_CHANGES = {
+                steer: 13.5,     // About 13.5 lbs per hole
+                drive: 325,      // About 325 lbs per hole
+                trailer: -338.5   // About -338.5 lbs per hole
+            };
+
+            // Constants for hole limits
+            const MIN_HOLE = 1;
+            const MAX_HOLE = 17;
+
+            // Calculate needed shift to balance drive and trailer
+            const weightDifference = trailerWeight - driveWeight;
+            
+            // Calculate holes needed to balance weights
+            const weightPerHole = Math.abs(WEIGHT_CHANGES.drive - WEIGHT_CHANGES.trailer);
+            const holesNeeded = Math.round(weightDifference / weightPerHole);
+            
+            // Ensure recommended hole is within valid range
+            let recommendedHole = trailerPosition + holesNeeded;
+            recommendedHole = Math.max(MIN_HOLE, Math.min(MAX_HOLE, recommendedHole));
+            
+            // Recalculate actual holes needed
+            const actualHolesNeeded = recommendedHole - trailerPosition;
+            
+            // Calculate weight transfers
+            const steerChange = actualHolesNeeded * WEIGHT_CHANGES.steer;
+            const driveChange = actualHolesNeeded * WEIGHT_CHANGES.drive;
+            const trailerChange = actualHolesNeeded * WEIGHT_CHANGES.trailer;
+            
+            // Adjust weights based on recommended position
+            const predictedSteer = steerWeight + steerChange;
+            const predictedDrive = driveWeight + driveChange;
+            const predictedTrailer = trailerWeight + trailerChange;
+
+            // Check if predicted weights are within limits
+            const steerOverage = predictedSteer > MAX_STEER ? predictedSteer - MAX_STEER : 0;
+            const driveOverage = predictedDrive > MAX_TANDEM ? predictedDrive - MAX_TANDEM : 0;
+            const trailerOverage = predictedTrailer > MAX_TANDEM ? predictedTrailer - MAX_TANDEM : 0;
+            
+            // If any axle would be overweight, adjust recommendation
+            if (steerOverage > 0 || driveOverage > 0 || trailerOverage > 0) {
+                // Calculate maximum safe holes to move
+                const maxHoles = Math.min(
+                    (MAX_STEER - steerWeight) / WEIGHT_CHANGES.steer,
+                    (MAX_TANDEM - driveWeight) / WEIGHT_CHANGES.drive,
+                    (MAX_TANDEM - trailerWeight) / WEIGHT_CHANGES.trailer
+                );
+                recommendedHole = trailerPosition + Math.floor(maxHoles);
+            }
+
+            // Calculate distance to move
+            const distanceInches = Math.abs(actualHolesNeeded) * holeSpacing;
+            
+            // Display results
+            const resultsDiv = document.getElementById('weightResults');
+            resultsDiv.innerHTML = `
+                <div class="weight-display">This will put about...</div>
+                <div class="weight-display">Steer: ${Math.round(predictedSteer).toLocaleString()} lbs</div>
+                <div class="weight-display">Drive: ${Math.round(predictedDrive).toLocaleString()} lbs</div>
+                <div class="weight-display">Trailer: ${Math.round(predictedTrailer).toLocaleString()} lbs</div>
+                <p class="recommendation">Pull truck forward to hole ${recommendedHole} (${actualHolesNeeded > 0 ? '+' : ''}${actualHolesNeeded} holes)</p>
+                <p>(${distanceInches}" back)</p>
+            `;
+
+            // Display total weight
+            const totalWeightDiv = document.getElementById('totalWeight');
+            totalWeightDiv.innerHTML = `Total Weight: ${totalWeight.toLocaleString()} lbs`;
+
+            // Display weight indicator
+            const weightUnderGross = 80000 - totalWeight;
+            const weightIndicatorDiv = document.getElementById('weightIndicator');
+            if (weightUnderGross >= 0) {
+                weightIndicatorDiv.innerHTML = `${weightUnderGross.toLocaleString()} lbs under gross limit`;
+                weightIndicatorDiv.className = 'weight-indicator under';
+            } else {
+                weightIndicatorDiv.innerHTML = `${Math.abs(weightUnderGross).toLocaleString()} lbs over gross limit`;
+                weightIndicatorDiv.className = 'weight-indicator over';
+            }
+        }
+    </script>
+</body>
+</html>
